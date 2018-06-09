@@ -74,7 +74,7 @@ export default function web3Middleware(config = {}) {
       const onReceipt = receipt => dispatch(getAction(receipt, defaultTypes.receipt));
 
       const onError = err => {
-        dispatch(getAction(err, defaultTypes.rejected)));
+        dispatch(getAction(err, defaultTypes.rejected))
         throw err;
       };
 
@@ -82,7 +82,7 @@ export default function web3Middleware(config = {}) {
       return promise
         .then(onFulfilled)
         .catch(onError)
-        .on(defaultTypes.transactionHash, onTransactionHash))
+        .on(defaultTypes.transactionHash, onTransactionHash)
         .on(defaultTypes.confirmation, onConfirmation)
         .on(defaultTypes.receipt, onReceipt)
         .on(defaultTypes.error, onError);
