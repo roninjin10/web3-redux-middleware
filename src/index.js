@@ -82,10 +82,10 @@ export default function web3Middleware(config = {}) {
       return promise
         .then(onFulfilled)
         .catch(onError)
-        .on(defaultTypes.transactionHash, onTransactionHash)
-        .on(defaultTypes.confirmation, onConfirmation)
-        .on(defaultTypes.receipt, onReceipt)
-        .on(defaultTypes.error, onError);
+        .on('transactionHash', onTransactionHash)
+        .on('confirmation', onConfirmation)
+        .on('receipt', onReceipt)
+        .on('error', onError);
     }
 
   }
