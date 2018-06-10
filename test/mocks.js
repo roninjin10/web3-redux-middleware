@@ -1,7 +1,7 @@
 import EventEmitter from 'events'
 import Promise from 'bluebird'
 
-export default class PromiEvent extends EventEmitter {
+export class PromiEvent extends EventEmitter {
   constructor(promise) {
     if (!promise) {
       throw new Error('no promise provided');
@@ -13,3 +13,16 @@ export default class PromiEvent extends EventEmitter {
     this.catch = promise.catch.bind(promise)
   }
 }
+
+export const mockStore = {
+  dispatched: [],
+  dispatch: (obj) => {
+    this.dispatched.push(obj);
+  }
+}
+
+export function mockNext(action) {
+  this.actions.push(action);
+}
+
+mockNext.actions = [];
