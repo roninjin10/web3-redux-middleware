@@ -1,7 +1,7 @@
 import EventEmitter from 'events'
 import Promise from 'bluebird'
 
-export class PromiEvent extends EventEmitter {
+export class MockPromiEvent extends EventEmitter {
   constructor(promise) {
     if (!promise) {
       throw new Error('no promise provided');

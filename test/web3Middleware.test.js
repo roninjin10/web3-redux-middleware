@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import { PromiEvent, MockStore, MockNext } from './mocks'
+import { MockPromiEvent, MockStore, MockNext } from './mocks'
 import EventEmitter from 'events'
 
 import isPromiEvent from '../src/isPromiEvent'
@@ -65,7 +65,7 @@ describe ('test web3Middleware', () => {
   });
 
   it('should not call next if payload is a PromiEvent', () => {
-    const promiEvent = new PromiEvent(Promise.resolve(null));
+    const promiEvent = new MockPromiEvent(Promise.resolve(null));
 
     dispatchAction({
       payload = promiEvent
@@ -75,7 +75,7 @@ describe ('test web3Middleware', () => {
   })
 
   it('should not call next if payload.promiEvent is a PromiEvent', () => {
-    const promiEvent = new PromiEvent(Promise.resolve(null))
+    const promiEvent = new MockPromiEvent(Promise.resolve(null))
 
     dispatchAction({
       payload: {
