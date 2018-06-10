@@ -69,7 +69,16 @@ export default function web3Middleware(config = {}) {
 
       const onTransactionHash = hash => dispatch(getAction(hash, defaultTypes.transactionHash));
 
-      const onConfirmation = (confirmationNumber, reciept) => dispatch(getAction({confirmationNumber, receipt}, defaultTypes.confirmation));
+      const confirmations = 0;
+      const onConfirmation = (confirmationNumber, reciept) => {
+        confirmations += 1;
+
+        return dispatch(getAction({
+          confirmationNumber,
+          receipt,
+          confirmations
+        }, defaultTypes.confirmation));
+      };
 
       const onReceipt = receipt => dispatch(getAction(receipt, defaultTypes.receipt));
 
