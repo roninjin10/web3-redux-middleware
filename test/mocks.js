@@ -14,15 +14,22 @@ export class PromiEvent extends EventEmitter {
   }
 }
 
-export const mockStore = {
-  dispatched: [],
-  dispatch: (obj) => {
+export class MockStore {
+  constructor() {
+    this.dispatched = []
+  }
+
+  dispatch = (obj) => {
     this.dispatched.push(obj);
   }
 }
 
-export function mockNext(action) {
-  this.actions.push(action);
-}
+export class MockNext {
+  constructor() {
+    this.actions = [];
+  }
 
-mockNext.actions = [];
+  next = (action) => {
+    this.actions.push(action)
+  }
+}
