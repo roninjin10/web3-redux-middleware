@@ -61,7 +61,8 @@ function promiEventReducer(state, action) {
     case `${PROMI_EVENT}_CONFIRMED`:
       return {
         ...state,
-        confirmationNumber: action.payload
+        confirmationObject: action.payload,
+        confirmationsCount: action.payload.confirmationsCount
       };
 
     case `${PROMI_EVENT}_RECEIPT`:

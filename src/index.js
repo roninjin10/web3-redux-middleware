@@ -69,7 +69,7 @@ export default function web3Middleware(config = {}) {
 
       const onTransactionHash = hash => dispatch(getAction(hash, defaultTypes.transactionHash));
 
-      const confirmations = 0;
+      const confirmationsCount = 0;
       const onConfirmation = (confirmationNumber, reciept) => {
         confirmations += 1;
 
