@@ -1,18 +1,31 @@
 {
   "name": "redux-promise-middleware",
-  "description": "Redux middleware for promises, async functions and conditional optimistic updates",
-  "version": "5.1.1",
-  "main": "dist/index.js",
-  "module": "dist/es/index.js",
-  "scripts": {
-    "test": "jest"
-  },
-  "pre-commit": [
-    "precommit"
-  ],
+  "version": "0.0.0",
+  "description": "Redux middleware for handling Web3.js PromiEvents inspired by redux-promise-middleware",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pburtchaell/redux-promise-middleware.git"
+    "url": "git+https://github.com/roninjin10/web3-redux-middleware"
+  },
+  "author": "William Cory <willcory10@gmail.com>",
+  "contributors": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/roninjin10/web3-redux-middleware/issues"
+  },
+  "homepage": "https://github.com/roninjin10/web3-redux-middleware",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "~8.9.4",
+    "npm": ">=5.8.0"
+  },
+  "scripts": {
+    "prestart": "npm run -s build",
+    "start": "node dist/server/index.js",
+    "dev": "nodemon src/server/index.js --exec \"node -r dotenv/config -r babel-register\"",
+    "clean": "rimraf dist",
+    "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
+    "test": "jest",
+    "lint": "esw -w src test"
   },
   "keywords": [
     "redux",
@@ -20,6 +33,8 @@
     "middlewares",
     "promise",
     "promises",
+    "blockchain",
+    "ethereum",
     "web3",
     "promiEvents",
     "optimistic update",
@@ -27,45 +42,29 @@
     "async",
     "async functions"
   ],
-  "author": "William Cory <willcory10@gmail.com>)",
-  "contributors": [],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/roninjin10/web3-redux-middleware/issues"
-  },
-  "homepage": "https://github.com/roninjin10/web3-redux-middleware",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.0.0",
-    "babel-polyfill": "^6.7.4",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^21.2.0",
+    "babel-loader": "^7.1.4",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2016": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "bluebird": "^3.5.0",
-    "coveralls": "^2.13.1",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^13.0.0",
-    "eslint-plugin-import": "^2.3.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.7.1",
-    "express-urlrewrite": "^1.2.0",
-    "faker": "^4.1.0",
-    "github-contributors": "^0.4.1",
-    "isomorphic-fetch": "^2.2.1",
-    "istanbul": "^1.0.0-alpha.2",
+    "babel-register": "^6.26.0",
+    "bluebird": "^3.5.1",
+    "eslint": "^4.12.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jest": "^21.3.2",
+    "eslint-watch": "^3.1.3",
     "jest": "^21.2.1",
-    "json-server": "^0.10.1",
-    "lodash": "^4.6.1",
-    "pre-commit": "^1.1.3",
+    "nodemon": "^1.12.1",
     "redux": "^4.0.0",
-    "synp": "^1.2.1",
+    "supertest": "^3.0.0",
     "web3": "^1.0.0-beta.34",
-    "webpack": "^2.6.1",
-    "webpack-dev-middleware": "^1.10.2",
-    "webpack-hot-middleware": "^2.18.0"
+    "webpack": "^4.12.0"
   },
   "peerDependencies": {
     "redux": "^2.0.0 || ^3.0.0 || ^4.0.0",
@@ -73,7 +72,6 @@
   },
   "babel": {
     "presets": [
-      "@babel/env",
       [
         "env",
         {
@@ -87,5 +85,33 @@
       "transform-object-rest-spread",
       "transform-class-properties"
     ]
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "plugins": [
+      "import",
+      "jest"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2017,
+      "sourceType": "module"
+    },
+    "env": {
+      "node": true,
+      "jest": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "rules": {
+      "jest/no-focused-tests": 2,
+      "jest/no-identical-title": 2
+    }
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "directories": {
+    "test": "test"
   }
 }
