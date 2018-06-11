@@ -136,7 +136,7 @@ describe ('test web3Middleware', () => {
 
     expect(mockStore.dispatched[0].toEqual({
       type: `${type.type}_REJECTED`,
-      payload: resolvedPayload,
+      payload: errorPayload,
       error: true
     }));
   });
@@ -168,10 +168,10 @@ describe ('test web3Middleware', () => {
       ...type
     });
 
-    promiEvent.emit('confirmation', confirmation);
-    promiEvent.emit('confirmation', confirmation);
+    promiEvent.emit('confirmation', confirmationNumber);
+    promiEvent.emit('confirmation', confirmationNumber);
 
-    expect(mockstore.dispatched[0]).toEqual({
+    expect(mockStore.dispatched[0]).toEqual({
       type: `${type.type}_CONFIRMED`,
       payload: {
         confirmationNumber,
@@ -180,7 +180,7 @@ describe ('test web3Middleware', () => {
       }
     });
 
-    expect(mockstore.dispatched[1]).toEqual({
+    expect(mockStore.dispatched[1]).toEqual({
       type: `${type.type}_CONFIRMED`,
       payload: {
         confirmationNumber,
@@ -201,7 +201,7 @@ describe ('test web3Middleware', () => {
 
     promiEvent.emit('receipt', receipt);
 
-    expect(mockstore.dispatched[0]).toEqual({
+    expect(mockStore.dispatched[0]).toEqual({
       type: `${type.type}_RECIEPT`,
       payload: receipt
     });
@@ -218,7 +218,7 @@ describe ('test web3Middleware', () => {
 
     promiEvent.emit('error', error);
 
-    expect(mockstore.dispatched[0]).toEqual({
+    expect(mockStore.dispatched[0]).toEqual({
       type: `${type.type}_ERROR`,
       payload: error,
       error: true
