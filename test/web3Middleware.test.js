@@ -6,7 +6,6 @@ import isPromiEvent from '../src/isPromiEvent'
 import web3Middleware from '../src'
 
 
-
 describe ('test isPromiEvent', () => {
   it('should return false for null', () => {
     expect(isPromiEvent(null).toBe(false));
@@ -34,7 +33,9 @@ describe ('test web3Middleware', () => {
   let mockNext;
   let mockStore;
 
+  const type = {type: 'TEST'}
   const CALLED_NEXT_ACTION = 'called next(action)';
+  const unresolvedPromise = new Promise(() => {});
 
   beforeEach(() => {
     mockNext = new MockNext();
@@ -45,7 +46,7 @@ describe ('test web3Middleware', () => {
   it('should return next action if payload doesn\'t exist', () => {
     const result = CALLED_NEXT_ACTION;
 
-    dispatchAction({result});
+    dispatchAction({result, ...type});
 
     expect(mockNext.actions[0].result).toBe(result);
   });
@@ -58,7 +59,8 @@ describe ('test web3Middleware', () => {
         thisPayload: 'not promise',
         promiEvent: 'not a promiEvent'
       },
-      result
+      result,
+      ...type
     });
 
     expect(mockNext.actions[0].result).toBe(result);
@@ -68,7 +70,8 @@ describe ('test web3Middleware', () => {
     const promiEvent = new MockPromiEvent(Promise.resolve(null));
 
     dispatchAction({
-      payload = promiEvent
+      payload: promiEvent,
+      ...type
     })
 
     expect(mockNext.actions.length).toBe(0);
@@ -78,43 +81,147 @@ describe ('test web3Middleware', () => {
     const promiEvent = new MockPromiEvent(Promise.resolve(null))
 
     dispatchAction({
-      payload: {
-        promiEvent
-      }
+      payload: {promiEvent},
+      ...type
     });
 
     expect(mockNext.actions.length).toBe(0);
   });
 
-  it('should dispatch _PENDING right away', () => {
+  it('should call next on _PENDING right away with the data in payload', () => {
+    const promiEvent = new MockPromiEvent(Promise.resolve(null));
+    const data = 'should be dispatched with _PENDING action';
 
+    dispatchAction({
+      payload: promiEvent,
+      data,
+      ...type
+    });
+
+    expect(mockNext.actions[0]).toEqual({
+      type: `${type.type}_PENDING`,
+      payload: data
+    });
   });
 
   it('should dispatch _FULFILLED when fulfilled', () => {
+    const resolvedPayload = 'resolved payload'
+    const promiEvent = new MockPromiEvent(Promise.resolve(resolvedPayload));
 
+    dispatchAction({
+      payload: promiEvent,
+      ...type
+    });
+
+    expect(mockNext.actions[0]).toEqual({
+      type: `${type.type}_PENDING`
+    })
+
+    expect(mockStore.dispatched[0].toEqual({
+      type: `${type.type}_FULFILLED`,
+      payload: resolvedPayload
+    }))
   });
 
-  it('should dispatch _REJECTED when rejected', () => {
 
+
+  it('should dispatch _REJECTED when rejected', () => {
+    const errorPayload = 'reason for rejection';
+    const promiEvent = new MockPromiEvent(Promise.reject(errorPayload))
+
+    dispatchAction({
+      payload: promiEvent,
+      ...type
+    });
+
+    expect(mockStore.dispatched[0].toEqual({
+      type: `${type.type}_REJECTED`,
+      payload: resolvedPayload,
+      error: true
+    }));
   });
 
   it('should dispatch _HASHED when hashed', () => {
+    const promiEvent = new MockPromiEvent(unresolvedPromise);
+    const transactionHash = 'transactionHash';
 
+    dispatchAction({
+      payload: promiEvent,
+      ...type
+    });
+
+    promiEvent.emit('transactionHash', transactionHash);
+
+    expect(mockStore.dispatched[0]).toEqual({
+      type: `${type.type}_HASHED`,
+      payload: transactionHash
+    });
   });
 
-  it('should dispatch _CONFIRMATION when on a confirmation event', () => {
+  it('should dispatch _CONFIRMATION when on a confirmation event with the number confirmation', () => {
+    const promiEvent = new MockPromiEvent(unresolvedPromise);
+    const confirmationNumber = 'confirmationNumber';
+    const receipt = 'receipt';
 
-  });
+    dispatchAction({
+      payload: promiEvent,
+      ...type
+    });
 
-  it ('should track how many confirmations have happened', () => {
+    promiEvent.emit('confirmation', confirmation);
+    promiEvent.emit('confirmation', confirmation);
 
+    expect(mockstore.dispatched[0]).toEqual({
+      type: `${type.type}_CONFIRMED`,
+      payload: {
+        confirmationNumber,
+        receipt,
+        confirmations: 1
+      }
+    });
+
+    expect(mockstore.dispatched[1]).toEqual({
+      type: `${type.type}_CONFIRMED`,
+      payload: {
+        confirmationNumber,
+        receipt,
+        confirmations: 2
+      }
+    });
   });
 
   it ('should dispatch _RECEIPT on receipt', () => {
+    const promiEvent = new MockPromiEvent(unresolvedPromise);
+    const receipt = 'receipt';
 
+    dispatchAction({
+      payload: promiEvent,
+      ...type
+    });
+
+    promiEvent.emit('receipt', receipt);
+
+    expect(mockstore.dispatched[0]).toEqual({
+      type: `${type.type}_RECIEPT`,
+      payload: receipt
+    });
   });
 
   it ('should dispatch _ERROR on error', () => {
+    const promiEvent = new MockPromiEvent(unresolvedPromise);
+    const error = 'error';
 
+    dispatchAction({
+      payload: promiEvent,
+      ...type
+    });
+
+    promiEvent.emit('error', error);
+
+    expect(mockstore.dispatched[0]).toEqual({
+      type: `${type.type}_ERROR`,
+      payload: error,
+      error: true
+    });
   });
 });
