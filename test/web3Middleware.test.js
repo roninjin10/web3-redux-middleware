@@ -8,7 +8,7 @@ import web3Middleware from '../src'
 
 describe ('test isPromiEvent', () => {
   it('should return false for null', () => {
-    expect(isPromiEvent(null).toBe(false));
+    expect(isPromiEvent(null)).toBe(false);
   });
 
   it ('should return false for a non object', () => {
@@ -24,7 +24,7 @@ describe ('test isPromiEvent', () => {
   });
 
   it ('should return true for a PromiEvent', () => {
-    expect(isPromiEvent(new PromiEvent(Promise.resolve(null)))).toBe(true);
+    expect(isPromiEvent(new MockPromiEvent(Promise.resolve(null)))).toBe(true);
   });
 });
 

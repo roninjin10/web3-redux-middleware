@@ -1,22 +1,22 @@
 import EventEmitter from 'events'
-import Promise from 'bluebird'
 
 export class MockPromiEvent extends EventEmitter {
   constructor(promise) {
+    super();
     if (!promise) {
       throw new Error('no promise provided');
     }
     if (typeof promise.then !== 'function') {
       throw new Error('no promise provided');
     }
-    this.then = promise.then.bind(promise)
-    this.catch = promise.catch.bind(promise)
+    this.then = promise.then.bind(promise);
+    this.catch = promise.catch.bind(promise);
   }
 }
 
 export class MockStore {
   constructor() {
-    this.dispatched = []
+    this.dispatched = [];
   }
 
   dispatch = (obj) => {
@@ -30,6 +30,6 @@ export class MockNext {
   }
 
   next = (action) => {
-    this.actions.push(action)
+    this.actions.push(action);
   }
 }
