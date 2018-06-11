@@ -2,8 +2,8 @@ import isPromiEvent from './isPromiEvent'
 import { defaultTypes } from './constants'
 
 export default function web3Middleware(config = {}) {
-  const PROMISE_TYPE_SUFFIXES = config.promiseTypeSuffixes || defaultTypes;
-  const PROMISE_TYPE_DELIMITER = config.promiseTypeDelimiter || '_';
+  const PROMIEVENT_TYPE_SUFFIXES = config.promiEventTypeSuffixes || defaultTypes;
+  const PROMIEVENT_TYPE_DELIMITER = config.promiEventTypeDelimiter || '_';
 
   return store => {
     const { dispatch } = store;
@@ -30,7 +30,7 @@ export default function web3Middleware(config = {}) {
         promiEvent = PAYLOAD;
 
       } else if (isPromiEvent(PAYLOAD.promiEvent)){
-        promise = PAYLOAD.promise;
+        promiEvent = PAYLOAD.promiEvent;
         data = PAYLOAD.data;
 
       } else {
@@ -43,8 +43,8 @@ export default function web3Middleware(config = {}) {
       const getAction = (newPayload, event) => {
         const type = [
           TYPE,
-          PROMISE_TYPE_SUFFIXES[event],
-        ].join(PROMISE_TYPE_DELIMITER);
+          PROMIEVENT_TYPE_SUFFIXES[event],
+        ].join(PROMIEVENT_TYPE_DELIMITER);
 
         const payload = newPayload === null || typeof newPayload === 'undefined'
           ? {}
@@ -63,20 +63,20 @@ export default function web3Middleware(config = {}) {
       }
 
       // dispatch pending first
-      next(getAction(getAction(data, defaultTypes.pending)));
+      next(getAction(data, defaultTypes.pending));
 
       const onFulfilled = result => dispatch(getAction(result, defaultTypes.fulfilled));
 
       const onTransactionHash = hash => dispatch(getAction(hash, defaultTypes.transactionHash));
 
-      const confirmationsCount = 0;
+      let confirmationsCount = 0;
       const onConfirmation = (confirmationNumber, reciept) => {
-        confirmations += 1;
+        confirmationsCount += 1;
 
         return dispatch(getAction({
           confirmationNumber,
-          receipt,
-          confirmations
+          reciept,
+          confirmationsCount
         }, defaultTypes.confirmation));
       };
 
@@ -88,7 +88,7 @@ export default function web3Middleware(config = {}) {
       };
 
 
-      return promise
+      return promiEvent
         .then(onFulfilled)
         .catch(onError)
         .on('transactionHash', onTransactionHash)

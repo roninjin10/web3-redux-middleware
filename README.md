@@ -20,14 +20,14 @@ const store = createStore(
   applyMiddleware(web3Middleware())
 );
 
-const PROMI_EVENT = 'PROMI_EVENT';
+const EXAMPLE = 'EXAMPLE';
 
 const contract = new web3.eth.Contract(abi);
 
 // To Use just attatch a PromiEvent as a payload
 
 const promiEventAction = () => ({
-  type: PROMI_EVENT,
+  type: EXAMPLE,
   payload: contract
     .methods
     .contractMethod()
@@ -42,37 +42,37 @@ const promiEventAction = () => ({
 function promiEventReducer(state, action) {
   // A _PENDING event will be sent right away
   switch(action.type) {
-    case `${PROMI_EVENT}_PENDING`:
+    case `${EXAMPLE}_PENDING`:
       return state;
 
     // Other events will be released as the network events occur
-    case `${PROMI_EVENT}_FULFILLED`:
+    case `${EXAMPLE}_FULFILLED`:
       return {
         ...state,
         result: action.payload
       };
 
-    case `${PROMI_EVENT}_HASHED`:
+    case `${EXAMPLE}_HASHED`:
       return {
         ...state,
         hash: action.payload
       };
 
-    case `${PROMI_EVENT}_CONFIRMED`:
+    case `${EXAMPLE}_CONFIRMED`:
       return {
         ...state,
         confirmationObject: action.payload,
         confirmationsCount: action.payload.confirmationsCount
       };
 
-    case `${PROMI_EVENT}_RECEIPT`:
+    case `${EXAMPLE}_RECEIPT`:
       return {
         ...state,
         receipt: action.payload
       };
 
     // Dispatched on .catch
-    case `${PROMI_EVENT}_REJECTED`
+    case `${EXAMPLE}_REJECTED`
       return {
         ...state,
         value: action.payload,
@@ -80,7 +80,7 @@ function promiEventReducer(state, action) {
       };
 
     // Dispatched on 'error' event
-    case `${PROMI_EVENT}_ERROR`:
+    case `${EXAMPLE}_ERROR`:
       return {
         ..state,
         value: action.payload,
@@ -93,7 +93,7 @@ function promiEventReducer(state, action) {
 // Common use case is when you want to send some data for optimistic loading
 // The data will be dispatched on the _PENDING action
 const promiEventAction2 = () => ({
-  type: PROMI_EVENT,
+  type: EXAMPLE,
   payload: {
     data: 'Some Data',
     promiEvent: contract
@@ -107,7 +107,7 @@ const promiEventAction2 = () => ({
 
 // Any meta data can be attatched the the meta property.  It will be dispatched on every event
 const promiEventAction3 = () => ({
-  type: PROMI_EVENT,
+  type: EXAMPLE,
   meta: 'some meta data'
   payload: contract
     .methods
@@ -120,8 +120,8 @@ const promiEventAction3 = () => ({
 
 // to change the promise type suffixes or the delimiter just pass in a config object
 const configedWeb3Middleware = web3Redux({
-  promiseTypeDelimiter: ' ',
-  promiseTypeSuffixes: {
+  promiEventTypeDelimiter: ' ',
+  promiEventTypeSuffixes: {
     pending: 'WAITING',
     fulfilled: 'SUCCESS',
     rejected: 'FAIL',
