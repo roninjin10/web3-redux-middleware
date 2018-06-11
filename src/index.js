@@ -67,6 +67,8 @@ export default function web3Middleware(config = {}) {
 
       const onFulfilled = result => dispatch(getAction(result, 'fulfilled'));
 
+      const onRejected = err => dispatch(getAction(err, 'rejected'))
+
       const onTransactionHash = hash => dispatch(getAction(hash, 'transactionHash'));
 
       let confirmationsCount = 0;
@@ -93,7 +95,7 @@ export default function web3Middleware(config = {}) {
         .on('receipt', onReceipt)
         .on('error', onError)
         .then(onFulfilled)
-        .catch(onError);
+        .catch(onRejected);
     }
 
   }

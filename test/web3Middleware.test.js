@@ -127,11 +127,13 @@ describe ('test web3Middleware', () => {
 
 
 
-  it('should dispatch _REJECTED when rejected', () => {
+  it('should dispatch _REJECTED when rejected', async () => {
     const errorPayload = 'reason for rejection';
-    const promiEvent = new MockPromiEvent(Promise.reject(errorPayload))
+    const promiEvent = new MockPromiEvent(new Promise((resolve, reject) => {
+        reject(errorPayload);
+    }));
 
-    dispatchAction({
+    await dispatchAction({
       payload: promiEvent,
       ...type
     });
@@ -163,22 +165,22 @@ describe ('test web3Middleware', () => {
   it('should dispatch _CONFIRMATION when on a confirmation event with the number confirmation', () => {
     const promiEvent = new MockPromiEvent(unresolvedPromise);
     const confirmationNumber = 'confirmationNumber';
-    const receipt = 'receipt';
+    const reciept = 'reciept';
 
     dispatchAction({
       payload: promiEvent,
       ...type
     });
 
-    promiEvent.emit('confirmation', confirmationNumber);
-    promiEvent.emit('confirmation', confirmationNumber);
+    promiEvent.emit('confirmation', confirmationNumber, reciept);
+    promiEvent.emit('confirmation', confirmationNumber, reciept);
 
     expect(mockStore.dispatched[1]).toEqual({
       type: `${type.type}_CONFIRMED`,
       payload: {
         confirmationNumber,
-        receipt,
-        confirmations: 1
+        reciept,
+        confirmationsCount: 1
       }
     });
 
@@ -186,8 +188,8 @@ describe ('test web3Middleware', () => {
       type: `${type.type}_CONFIRMED`,
       payload: {
         confirmationNumber,
-        receipt,
-        confirmations: 2
+        reciept,
+        confirmationsCount: 2
       }
     });
   });
