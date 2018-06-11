@@ -5,9 +5,7 @@
 PromiEvent-redux Middleware enables robust handling of async action creators in [Redux](http://redux.js.org): it accepts a promiEvent and dispatches pending, fulfilled and rejected actions.
 Using Web3 Redux Middleware allows for declarative Reducers to handle Web3.js method sends.
 
-TODO add confirmation number property to _CONFIRMATION actions
 TODO support .call() as well as .send()
-TODO more unit tests
 
 ## Example
 ```js
