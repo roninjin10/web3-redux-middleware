@@ -52,7 +52,7 @@ export default function web3Middleware(config = {}) {
 
         const error = event === 'error' || event === 'rejected' ? {error: true} : {};
 
-        const meta = meta !== undefined ? {meta: META} : {}
+        const meta = META !== undefined ? {meta: META} : {}
 
         return ({
           type,
@@ -89,12 +89,12 @@ export default function web3Middleware(config = {}) {
 
 
       return promiEvent
-        .then(onFulfilled)
-        .catch(onError)
         .on('transactionHash', onTransactionHash)
         .on('confirmation', onConfirmation)
         .on('receipt', onReceipt)
-        .on('error', onError);
+        .on('error', onError)
+        .then(onFulfilled)
+        .catch(onError);
     }
 
   }
