@@ -106,23 +106,23 @@ describe ('test web3Middleware', () => {
     });
   });
 
-  it('should dispatch _FULFILLED when fulfilled', () => {
+  it('should dispatch _FULFILLED when fulfilled', async () => {
     const resolvedPayload = 'resolved payload'
     const promiEvent = new MockPromiEvent(Promise.resolve(resolvedPayload));
 
-    dispatchAction({
+    await dispatchAction({
       payload: promiEvent,
       ...type
     });
 
     expect(mockStore.dispatched[0]).toEqual({
       type: `${type.type}_PENDING`
-    })
+    });
 
-    expect(mockStore.dispatched[1].toEqual({
+    expect(mockStore.dispatched[1]).toEqual({
       type: `${type.type}_FULFILLED`,
       payload: resolvedPayload
-    }))
+    });
   });
 
 
@@ -136,11 +136,11 @@ describe ('test web3Middleware', () => {
       ...type
     });
 
-    expect(mockStore.dispatched[1].toEqual({
+    expect(mockStore.dispatched[1]).toEqual({
       type: `${type.type}_REJECTED`,
       payload: errorPayload,
       error: true
-    }));
+    });
   });
 
   it('should dispatch _HASHED when hashed', () => {

@@ -80,11 +80,10 @@ export default function web3Middleware(config = {}) {
         }, 'confirmation'));
       };
 
-      const onReceipt = receipt => dispatch(getAction(receipt, 'receipt'));
+      const onReceipt = receipt => dispatch(getAction(receipt, 'reciept'));
 
       const onError = err => {
         dispatch(getAction(err, 'error'))
-        throw err;
       };
 
 
