@@ -4,6 +4,7 @@ export const REJECTED = 'REJECTED'
 export const HASHED = 'HASHED'
 export const CONFIRMED = 'CONFIRMED'
 export const RECIEPT = 'RECIEPT'
+export const ERROR = 'ERROR'
 export const defaultTypes = {
   pending: PENDING,
   fulfilled: FULFILLED,
