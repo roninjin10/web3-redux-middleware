@@ -41,10 +41,13 @@ export default function web3Middleware(config = {}) {
       const META = action.meta;
 
       const getAction = (newPayload, event) => {
+        console.log('get action', event, PROMIEVENT_TYPE_SUFFIXES);
+        console.log('action is ', PROMIEVENT_TYPE_SUFFIXES[event])
         const type = [
           TYPE,
-          PROMIEVENT_TYPE_SUFFIXES[event],
+          PROMIEVENT_TYPE_SUFFIXES[event]
         ].join(PROMIEVENT_TYPE_DELIMITER);
+        console.log('type is ', type);
 
         const payload = newPayload === null || typeof newPayload === 'undefined'
           ? {}
@@ -63,11 +66,11 @@ export default function web3Middleware(config = {}) {
       }
 
       // dispatch pending first
-      next(getAction(data, defaultTypes.pending));
+      dispatch(getAction(data, 'pending'));
 
-      const onFulfilled = result => dispatch(getAction(result, defaultTypes.fulfilled));
+      const onFulfilled = result => dispatch(getAction(result, 'fulfilled'));
 
-      const onTransactionHash = hash => dispatch(getAction(hash, defaultTypes.transactionHash));
+      const onTransactionHash = hash => dispatch(getAction(hash, 'transactionHash'));
 
       let confirmationsCount = 0;
       const onConfirmation = (confirmationNumber, reciept) => {
@@ -77,13 +80,13 @@ export default function web3Middleware(config = {}) {
           confirmationNumber,
           reciept,
           confirmationsCount
-        }, defaultTypes.confirmation));
+        }, 'confirmation'));
       };
 
-      const onReceipt = receipt => dispatch(getAction(receipt, defaultTypes.receipt));
+      const onReceipt = receipt => dispatch(getAction(receipt, 'receipt'));
 
       const onError = err => {
-        dispatch(getAction(err, defaultTypes.rejected))
+        dispatch(getAction(err, 'error'))
         throw err;
       };
 
