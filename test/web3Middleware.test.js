@@ -88,17 +88,19 @@ describe ('test web3Middleware', () => {
     expect(mockNext.actions.length).toBe(0);
   });
 
-  it('should call next on _PENDING right away with the data in payload', () => {
+  it('should dispatched _PENDING right away with the data in payload', () => {
     const promiEvent = new MockPromiEvent(Promise.resolve(null));
     const data = 'should be dispatched with _PENDING action';
 
     dispatchAction({
-      payload: promiEvent,
-      data,
+      payload: {
+        promiEvent,
+        data,
+      },
       ...type
     });
 
-    expect(mockNext.actions[0]).toEqual({
+    expect(mockStore.dispatched[0]).toEqual({
       type: `${type.type}_PENDING`,
       payload: data
     });
@@ -113,11 +115,11 @@ describe ('test web3Middleware', () => {
       ...type
     });
 
-    expect(mockNext.actions[0]).toEqual({
+    expect(mockStore.dispatched[0]).toEqual({
       type: `${type.type}_PENDING`
     })
 
-    expect(mockStore.dispatched[0].toEqual({
+    expect(mockStore.dispatched[1].toEqual({
       type: `${type.type}_FULFILLED`,
       payload: resolvedPayload
     }))
@@ -134,7 +136,7 @@ describe ('test web3Middleware', () => {
       ...type
     });
 
-    expect(mockStore.dispatched[0].toEqual({
+    expect(mockStore.dispatched[1].toEqual({
       type: `${type.type}_REJECTED`,
       payload: errorPayload,
       error: true
@@ -152,7 +154,7 @@ describe ('test web3Middleware', () => {
 
     promiEvent.emit('transactionHash', transactionHash);
 
-    expect(mockStore.dispatched[0]).toEqual({
+    expect(mockStore.dispatched[1]).toEqual({
       type: `${type.type}_HASHED`,
       payload: transactionHash
     });
@@ -171,7 +173,7 @@ describe ('test web3Middleware', () => {
     promiEvent.emit('confirmation', confirmationNumber);
     promiEvent.emit('confirmation', confirmationNumber);
 
-    expect(mockStore.dispatched[0]).toEqual({
+    expect(mockStore.dispatched[1]).toEqual({
       type: `${type.type}_CONFIRMED`,
       payload: {
         confirmationNumber,
@@ -180,7 +182,7 @@ describe ('test web3Middleware', () => {
       }
     });
 
-    expect(mockStore.dispatched[1]).toEqual({
+    expect(mockStore.dispatched[2]).toEqual({
       type: `${type.type}_CONFIRMED`,
       payload: {
         confirmationNumber,
@@ -201,7 +203,7 @@ describe ('test web3Middleware', () => {
 
     promiEvent.emit('receipt', receipt);
 
-    expect(mockStore.dispatched[0]).toEqual({
+    expect(mockStore.dispatched[1]).toEqual({
       type: `${type.type}_RECIEPT`,
       payload: receipt
     });
@@ -218,7 +220,7 @@ describe ('test web3Middleware', () => {
 
     promiEvent.emit('error', error);
 
-    expect(mockStore.dispatched[0]).toEqual({
+    expect(mockStore.dispatched[1]).toEqual({
       type: `${type.type}_ERROR`,
       payload: error,
       error: true

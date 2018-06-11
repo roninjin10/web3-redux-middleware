@@ -41,13 +41,10 @@ export default function web3Middleware(config = {}) {
       const META = action.meta;
 
       const getAction = (newPayload, event) => {
-        console.log('get action', event, PROMIEVENT_TYPE_SUFFIXES);
-        console.log('action is ', PROMIEVENT_TYPE_SUFFIXES[event])
         const type = [
           TYPE,
           PROMIEVENT_TYPE_SUFFIXES[event]
         ].join(PROMIEVENT_TYPE_DELIMITER);
-        console.log('type is ', type);
 
         const payload = newPayload === null || typeof newPayload === 'undefined'
           ? {}
