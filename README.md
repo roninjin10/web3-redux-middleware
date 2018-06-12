@@ -22,9 +22,9 @@ const EXAMPLE = 'EXAMPLE';
 
 const contract = new web3.eth.Contract(abi);
 
-// To Use just attatch a PromiEvent as a payload
+// To Use just attach a PromiEvent as a payload
 
-const promiEventAction = () => ({
+const promiEventActionCreator = () => ({
   type: EXAMPLE,
   payload: contract
     .methods
