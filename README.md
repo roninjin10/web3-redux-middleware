@@ -2,10 +2,9 @@
 
 [![npm version]()]() [![Build Status]()]() [![npm downloads]()]()
 
-PromiEvent-redux Middleware enables robust handling of async action creators in [Redux](http://redux.js.org): it accepts a promiEvent and dispatches pending, hashed, confirmed, receipt, fulfilled and rejected actions.
-Using Web3 Redux Middleware allows for declarative Reducers to handle Web3.js method sends.
+PromiEvent-redux Middleware enables declarative reducers when making calls to the Ethereum network with Web3 [Redux](http://redux.js.org): it accepts a promiEvent and dispatches pending, hashed, confirmed, receipt, fulfilled and rejected actions.
 
-TODO support .call() as well as .send()
+TODO add support .call()
 
 ## Example
 ```js
