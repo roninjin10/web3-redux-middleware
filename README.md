@@ -1,10 +1,8 @@
 # Web3 Redux Middleware
 
-[![npm version]()]() [![Build Status]()]() [![npm downloads]()]()
+PromiEvent-redux Middleware enables declarative reducers when making calls to the Ethereum network with Web3 [Redux](http://redux.js.org): it accepts a promiEvent or promise and dispatches pending, hashed, confirmed, receipt, fulfilled and rejected actions.
 
-PromiEvent-redux Middleware enables declarative reducers when making calls to the Ethereum network with Web3 [Redux](http://redux.js.org): it accepts a promiEvent and dispatches pending, hashed, confirmed, receipt, fulfilled and rejected actions.
-
-TODO add support .call()
+Heavily inspired by the popular [redux-promise-middleware](https://github.com/pburtchaell/redux-promise-middleware) library.
 
 ## Example
 ```js
@@ -133,16 +131,16 @@ const configedWeb3Middleware = web3Redux({
 
 ## Releases
 
-- [Releases](TODO)
+- [Releases](https://github.com/roninjin10/web3-redux-middleware/releases)
 
 ## Maintainers
 
 - William Cory (roninjin10):
-  - [Twitter](https://twitter.com/roninjin10)
   - [GitHub](https://github.com/roninjin10)
+  - [Twitter](https://twitter.com/roninjin10)
 
 Please reach out if you have any questions or comments!
 
 ## License
 
-TODO
+[Code licensed with the MIT License (MIT)](/LICENSE).
