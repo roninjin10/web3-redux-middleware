@@ -1,6 +1,6 @@
 {
   "name": "web3-redux-middleware",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Redux middleware for handling Web3.js PromiEvents",
   "repository": {
     "type": "git",
