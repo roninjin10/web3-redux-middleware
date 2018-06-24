@@ -1,4 +1,5 @@
-import isPromiEvent from './isPromiEvent'
+import { isPromiEvent } from './isPromiEvent'
+import { isPromise } from './isPromise'
 import { defaultTypes } from './constants'
 
 export default function web3Middleware(config = {}) {

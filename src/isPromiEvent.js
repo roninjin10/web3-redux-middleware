@@ -1,4 +1,4 @@
-export default function isPromiEvent(value) {
+export function isPromiEvent(value) {
   return (
     value !== null &&
     typeof value === 'object' &&

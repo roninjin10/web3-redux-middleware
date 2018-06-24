@@ -2,9 +2,9 @@ import Promise from 'bluebird'
 import { MockPromiEvent, MockStore, MockNext } from './mocks'
 import EventEmitter from 'events'
 
-import isPromiEvent from '../src/isPromiEvent'
+import { isPromiEvent } from '../src/isPromiEvent'
+import { isPromise } from '../src/isPromise'
 import web3Middleware from '../src'
-import isPromise from '../src/isPromise'
 
 describe ('test isPromiEvent', () => {
   it('should return false for null', () => {
