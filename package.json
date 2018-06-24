@@ -24,8 +24,7 @@
     "test": "jest",
     "lint": "esw -w src test",
     "prepare": "npm run build",
-    "prebuild": "npm run test",
-    "pretest": "npm run lint"
+    "prebuild": "npm run test"
   },
   "pre-commit": [
     "precommit"
