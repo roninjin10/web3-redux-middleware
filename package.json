@@ -1,10 +1,10 @@
 {
   "name": "web3-redux-middleware",
   "version": "1.0.3",
-  "description": "Redux middleware for handling Web3.js PromiEvents inspired by redux-promise-middleware",
+  "description": "Redux middleware for handling Web3.js PromiEvents",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/roninjin10/web3-redux-middleware"
+    "url": "git+https://github.com/roninjin10/web3-redux-middleware.git"
   },
   "author": "William Cory <willcory10@gmail.com>",
   "contributors": [],
@@ -22,8 +22,15 @@
     "clean": "rimraf dist",
     "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
     "test": "jest",
-    "lint": "esw -w src test"
+    "lint": "esw -w src test",
+    "prepare": "npm run build",
+    "precommit": "echo 'Running pre-commit hooks...' && npm run test",
+    "prebuild": "npm run test",
+    "pretest": "npm run lint"
   },
+  "pre-commit": [
+    "precommit"
+  ],
   "keywords": [
     "npm",
     "redux",
