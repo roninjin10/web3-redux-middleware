@@ -11,8 +11,9 @@ export default function web3Middleware(config = {}) {
 
     return next => action => {
 
-      let promiEvent;
+      let promiEventOrPromise;
       let data;
+      let isRegularPromise;
 
       if (!action.payload) {
         return next(action);
@@ -27,13 +28,19 @@ export default function web3Middleware(config = {}) {
        * 3. Neither then just move on to next middleware
        */
 
-      if (isPromiEvent(PAYLOAD)) {
-        promiEvent = PAYLOAD;
+      if (isPromiEvent(PAYLOAD) || isPromise(PAYLOAD)) {
+        promiEventOrPromise = PAYLOAD;
+        isRegularPromise = !isPromiEvent(PAYLOAD)
 
-      } else if (isPromiEvent(PAYLOAD.promiEvent)){
-        promiEvent = PAYLOAD.promiEvent;
+      } else if (
+        isPromiEvent(PAYLOAD.promiEvent) ||
+        isPromise(PAYLOAD.promiEvent) ||
+        isPromiEvent(PAYLOAD.promise) ||
+        isPromise(PAYLOAD.promise)
+      ) {
+        promiEventOrPromise = PAYLOAD.promiEvent || PAYLOAD.promise;
         data = PAYLOAD.data;
-
+        isRegularPromise = !isPromiEvent(promiEventOrPromise) && isPromise(promiEventOrPromise)
       } else {
         return next(action)
       }
@@ -90,7 +97,10 @@ export default function web3Middleware(config = {}) {
       };
 
 
-      return promiEvent
+      if (isRegularPromise) {
+        return promiEventOrPromise.then(onFulfilled).catch(onRejected)
+      }
+      return promiEventOrPromise
         .on('transactionHash', onTransactionHash)
         .on('confirmation', onConfirmation)
         .on('receipt', onReceipt)
