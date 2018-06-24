@@ -10,7 +10,6 @@ export default function web3Middleware(config = {}) {
     const { dispatch } = store;
 
     return next => action => {
-
       let promiEventOrPromise;
       let data;
       let isRegularPromise;
@@ -23,9 +22,9 @@ export default function web3Middleware(config = {}) {
 
       /*
        * 3 cases
-       * 1. PAYLOAD is promiEvent
-       * 2. PAYLOAD.promiEvent is promiEvent
-       * 3. Neither then just move on to next middleware
+       * 1. action.payload is a promiEvent or promise
+       * 2. action.payload.promiEvent or action.payload.promise is
+       * 3. neither is and we should just call next
        */
 
       if (isPromiEvent(PAYLOAD) || isPromise(PAYLOAD)) {
@@ -41,6 +40,7 @@ export default function web3Middleware(config = {}) {
         promiEventOrPromise = PAYLOAD.promiEvent || PAYLOAD.promise;
         data = PAYLOAD.data;
         isRegularPromise = !isPromiEvent(promiEventOrPromise) && isPromise(promiEventOrPromise)
+
       } else {
         return next(action)
       }
@@ -48,7 +48,7 @@ export default function web3Middleware(config = {}) {
       const TYPE = action.type;
       const META = action.meta;
 
-      const getAction = (newPayload, event) => {
+      const createAction = (newPayload, event) => {
         const type = [
           TYPE,
           PROMIEVENT_TYPE_SUFFIXES[event]
@@ -70,32 +70,24 @@ export default function web3Middleware(config = {}) {
         })
       }
 
-      // dispatch pending first
-      dispatch(getAction(data, 'pending'));
-
-      const onFulfilled = result => dispatch(getAction(result, 'fulfilled'));
-
-      const onRejected = err => dispatch(getAction(err, 'rejected'))
-
-      const onTransactionHash = hash => dispatch(getAction(hash, 'transactionHash'));
+      const onFulfilled = result => dispatch(createAction(result, 'fulfilled'));
+      const onRejected = err => dispatch(createAction(err, 'rejected'))
+      const onTransactionHash = hash => dispatch(createAction(hash, 'transactionHash'));
+      const onReceipt = receipt => dispatch(createAction(receipt, 'reciept'));
+      const onError = err => dispatch(createAction(err, 'error'))
 
       let confirmationsCount = 0;
       const onConfirmation = (confirmationNumber, reciept) => {
         confirmationsCount += 1;
 
-        return dispatch(getAction({
+        return dispatch(createAction({
           confirmationNumber,
           reciept,
           confirmationsCount
         }, 'confirmation'));
       };
 
-      const onReceipt = receipt => dispatch(getAction(receipt, 'reciept'));
-
-      const onError = err => {
-        dispatch(getAction(err, 'error'))
-      };
-
+      dispatch(createAction(data, 'pending'));
 
       if (isRegularPromise) {
         return promiEventOrPromise.then(onFulfilled).catch(onRejected)
@@ -108,6 +100,5 @@ export default function web3Middleware(config = {}) {
         .then(onFulfilled)
         .catch(onRejected);
     }
-
   }
 }
