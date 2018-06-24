@@ -4,7 +4,7 @@ import EventEmitter from 'events'
 
 import isPromiEvent from '../src/isPromiEvent'
 import web3Middleware from '../src'
-
+import isPromise from '../src/isPromise'
 
 describe ('test isPromiEvent', () => {
   it('should return false for null', () => {
@@ -27,6 +27,16 @@ describe ('test isPromiEvent', () => {
     expect(isPromiEvent(new MockPromiEvent(Promise.resolve(null)))).toBe(true);
   });
 });
+
+describe ('test isPromise', () => {
+  it('should return true for a Promise', () => {
+    expect(isPromise(Promise.resolve(null))).toBe(true)
+  })
+
+  it('should not return true for a non Promise', () => {
+    expect(isPromise({})).toBe(false)
+  })
+})
 
 describe ('test web3Middleware', () => {
   let dispatchAction;
@@ -212,8 +222,8 @@ describe ('test web3Middleware', () => {
   });
 
   it ('should dispatch _ERROR on error', () => {
-    const promiEvent = new MockPromiEvent(unresolvedPromise);
-    const error = 'error';
+    const promiEvent = new MockPromiEvent(unresolvedPromise)
+    const error = 'error'
 
     dispatchAction({
       payload: promiEvent,
@@ -229,3 +239,94 @@ describe ('test web3Middleware', () => {
     });
   });
 });
+
+describe('test middleware with Promise', () => {
+  let dispatchAction;
+  let mockNext;
+  let mockStore;
+
+  const type = {type: 'TEST'}
+  const resolvedPromise = Promise.resolve('resolve');
+
+  beforeEach(() => {
+    mockNext = new MockNext();
+    mockStore = new MockStore();
+    dispatchAction = web3Middleware()(mockStore)(mockNext.next.bind(mockNext));
+  });
+
+  it('should not call next if payload is a Promise', () => {
+
+    dispatchAction({
+      payload: resolvedPromise,
+      ...type
+    })
+
+    expect(mockNext.actions.length).toBe(0)
+  })
+
+  it('should not call next if payload.promiEvent is a Promise', () => {
+
+    dispatchAction({
+      payload: {promiEvent: resolvedPromise},
+      ...type
+    });
+
+    expect(mockNext.actions.length).toBe(0);
+  });
+
+  it('should dispatched _PENDING right away with the data in payload', () => {
+    const data = 'should be dispatched with _PENDING action';
+
+    dispatchAction({
+      payload: {
+        promiEvent: resolvedPromise,
+        data,
+      },
+      ...type
+    });
+
+    expect(mockStore.dispatched[0]).toEqual({
+      type: `${type.type}_PENDING`,
+      payload: data
+    });
+  });
+
+  it('should dispatch _FULFILLED when fulfilled', async () => {
+    const resolvedPayload = 'resolved payload';
+    const promise = Promise.resolve(resolvedPayload);
+
+    await dispatchAction({
+      payload: promise,
+      ...type
+    });
+
+    expect(mockStore.dispatched[0]).toEqual({
+      type: `${type.type}_PENDING`
+    });
+
+    expect(mockStore.dispatched[1]).toEqual({
+      type: `${type.type}_FULFILLED`,
+      payload: resolvedPayload
+    });
+  });
+
+
+
+  it('should dispatch _REJECTED when rejected', async () => {
+    const errorPayload = 'reason for rejection';
+    const promise = new Promise((resolve, reject) => {
+        reject(errorPayload);
+    });
+
+    await dispatchAction({
+      payload: promise,
+      ...type
+    });
+
+    expect(mockStore.dispatched[1]).toEqual({
+      type: `${type.type}_REJECTED`,
+      payload: errorPayload,
+      error: true
+    });
+  });
+})
