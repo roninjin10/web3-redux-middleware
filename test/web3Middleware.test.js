@@ -16,7 +16,7 @@ describe ('test isPromiEvent', () => {
   });
 
   it ('should return false for a EventEmitter that is not a promise', () => {
-    expect(isPromiEvent(new EventEmitter)).toBe(false);
+    expect(isPromiEvent(new EventEmitter())).toBe(false);
   });
 
   it('should return false for a Promise that is not an EventEmitter', () => {
