@@ -1,13 +1,13 @@
 # Web3 Redux Middleware
 
-PromiEvent-redux Middleware enables declarative reducers when making calls to the Ethereum network with Web3 [Redux](http://redux.js.org): it accepts a promiEvent or promise and dispatches pending, hashed, confirmed, receipt, fulfilled and rejected actions.
+PromiEvent-redux Middleware enables declarative reducers when making calls to the Ethereum network with [Web3](https://web3js.readthedocs.io/en/1.0/web3-eth.html) and [Redux](http://redux.js.org): it accepts a promiEvent or promise and dispatches pending, hashed, confirmed, receipt, fulfilled and rejected actions.
 
 Heavily inspired by the popular [redux-promise-middleware](https://github.com/pburtchaell/redux-promise-middleware) library.
 
 ## Example
 ```js
 import { createStore, applyMiddleware } from 'redux'
-import web3Redux from 'web3-redux-middleware'
+import web3Middleware from 'web3-redux-middleware'
 
 const store = createStore(
   promiEventReducer,
