@@ -20,13 +20,6 @@ export default function web3Middleware(config = {}) {
 
       const PAYLOAD = action.payload;
 
-      /*
-       * 3 cases
-       * 1. action.payload is a promiEvent or promise
-       * 2. action.payload.promiEvent or action.payload.promise is
-       * 3. neither is and we should just call next
-       */
-
       if (isPromiEvent(PAYLOAD) || isPromise(PAYLOAD)) {
         promiEventOrPromise = PAYLOAD;
         isRegularPromise = !isPromiEvent(PAYLOAD)
@@ -58,25 +51,39 @@ export default function web3Middleware(config = {}) {
           ? {}
           : {payload: newPayload};
 
-        const error = event === 'error' || event === 'rejected' ? {error: true} : {};
+        const error = event === 'error' || event === 'rejected' 
+          ? {error: true} 
+          : {};
 
-        const meta = META !== undefined ? {meta: META} : {}
+        const meta = META !== undefined 
+          ? {meta: META} 
+          : {};
 
         return ({
           type,
           ...payload,
           ...error,
           ...meta,
-        })
+        });
       }
 
-      const onFulfilled = result => dispatch(createAction(result, 'fulfilled'));
-      const onRejected = err => dispatch(createAction(err, 'rejected'))
-      const onTransactionHash = hash => dispatch(createAction(hash, 'transactionHash'));
-      const onReceipt = receipt => dispatch(createAction(receipt, 'reciept'));
-      const onError = err => dispatch(createAction(err, 'error'))
+      const onFulfilled = 
+        result => dispatch(createAction(result, 'fulfilled'));
+      
+      const onRejected = 
+        err => dispatch(createAction(err, 'rejected'));
+      
+      const onTransactionHash = 
+        hash => dispatch(createAction(hash, 'transactionHash'));
+      
+      const onReceipt = 
+        receipt => dispatch(createAction(receipt, 'reciept'));
+      
+      const onError = 
+        err => dispatch(createAction(err, 'error'));
 
       let confirmationsCount = 0;
+      
       const onConfirmation = (confirmationNumber, reciept) => {
         confirmationsCount += 1;
 
@@ -90,7 +97,7 @@ export default function web3Middleware(config = {}) {
       dispatch(createAction(data, 'pending'));
 
       if (isRegularPromise) {
-        return promiEventOrPromise.then(onFulfilled).catch(onRejected)
+        return promiEventOrPromise.then(onFulfilled).catch(onRejected);
       }
       return promiEventOrPromise
         .on('transactionHash', onTransactionHash)
