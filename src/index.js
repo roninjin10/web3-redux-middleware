@@ -22,7 +22,7 @@ export default function web3Middleware(config = {}) {
 
       if (isPromiEvent(PAYLOAD) || isPromise(PAYLOAD)) {
         promiEventOrPromise = PAYLOAD;
-        isRegularPromise = !isPromiEvent(PAYLOAD)
+        isRegularPromise = !isPromiEvent(PAYLOAD);
 
       } else if (
         isPromiEvent(PAYLOAD.promiEvent) ||
@@ -32,10 +32,10 @@ export default function web3Middleware(config = {}) {
       ) {
         promiEventOrPromise = PAYLOAD.promiEvent || PAYLOAD.promise;
         data = PAYLOAD.data;
-        isRegularPromise = !isPromiEvent(promiEventOrPromise) && isPromise(promiEventOrPromise)
+        isRegularPromise = !isPromiEvent(promiEventOrPromise) && isPromise(promiEventOrPromise);
 
       } else {
-        return next(action)
+        return next(action);
       }
 
       const TYPE = action.type;
