@@ -50,7 +50,7 @@ describe ('test web3Middleware', () => {
   beforeEach(() => {
     mockNext = new MockNext();
     mockStore = new MockStore();
-    dispatchAction = web3Middleware()(mockStore)(mockNext.next.bind(mockNext));
+    dispatchAction = web3Middleware()(mockStore)(mockNext.next);
   });
 
   it('should return next action if payload doesn\'t exist', () => {
@@ -255,7 +255,6 @@ describe('test middleware with Promise', () => {
   });
 
   it('should not call next if payload is a Promise', () => {
-
     dispatchAction({
       payload: resolvedPromise,
       ...type
@@ -265,7 +264,6 @@ describe('test middleware with Promise', () => {
   })
 
   it('should not call next if payload.promiEvent is a Promise', () => {
-
     dispatchAction({
       payload: {promiEvent: resolvedPromise},
       ...type

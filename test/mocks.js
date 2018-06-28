@@ -3,21 +3,13 @@ import EventEmitter from 'events'
 export class MockPromiEvent extends EventEmitter {
   constructor(promise) {
     super();
-    if (!promise) {
-      throw new Error('no promise provided');
-    }
-    if (typeof promise.then !== 'function') {
-      throw new Error('no promise provided');
-    }
     this.then = promise.then.bind(promise);
     this.catch = promise.catch.bind(promise);
   }
 }
 
 export class MockStore {
-  constructor() {
-    this.dispatched = [];
-  }
+  dispatched = [];
 
   dispatch = (obj) => {
     this.dispatched.push(obj);
@@ -25,11 +17,9 @@ export class MockStore {
 }
 
 export class MockNext {
-  constructor() {
-    this.actions = [];
-  }
+  actions = [];
 
-  next = (action) => {
+  next = action => {
     this.actions.push(action);
   }
 }
