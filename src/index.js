@@ -97,7 +97,7 @@ export default function web3Middleware(config = {}) {
       dispatch(createAction(data, 'pending'));
 
       return isRegularPromise
-        ? promiEventOrPromise.then(onFulfilled).catch(onRejected);
+        ? promiEventOrPromise.then(onFulfilled).catch(onRejected)
         : promiEventOrPromise
           .on('transactionHash', onTransactionHash)
           .on('confirmation', onConfirmation)
