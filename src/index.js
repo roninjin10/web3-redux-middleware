@@ -96,16 +96,15 @@ export default function web3Middleware(config = {}) {
 
       dispatch(createAction(data, 'pending'));
 
-      if (isRegularPromise) {
-        return promiEventOrPromise.then(onFulfilled).catch(onRejected);
-      }
-      return promiEventOrPromise
-        .on('transactionHash', onTransactionHash)
-        .on('confirmation', onConfirmation)
-        .on('receipt', onReceipt)
-        .on('error', onError)
-        .then(onFulfilled)
-        .catch(onRejected);
+      return isRegularPromise
+        ? promiEventOrPromise.then(onFulfilled).catch(onRejected);
+        : promiEventOrPromise
+          .on('transactionHash', onTransactionHash)
+          .on('confirmation', onConfirmation)
+          .on('receipt', onReceipt)
+          .on('error', onError)
+          .then(onFulfilled)
+          .catch(onRejected);
     }
   }
 }
