@@ -12,7 +12,6 @@ export default function web3Middleware(config = {}) {
     return next => action => {
       let promiEventOrPromise;
       let data;
-      let isRegularPromise;
 
       if (!action.payload) {
         return next(action);
@@ -22,7 +21,6 @@ export default function web3Middleware(config = {}) {
 
       if (isPromiEvent(PAYLOAD) || isPromise(PAYLOAD)) {
         promiEventOrPromise = PAYLOAD;
-        isRegularPromise = !isPromiEvent(PAYLOAD);
 
       } else if (
         isPromiEvent(PAYLOAD.promiEvent) ||
@@ -32,7 +30,6 @@ export default function web3Middleware(config = {}) {
       ) {
         promiEventOrPromise = PAYLOAD.promiEvent || PAYLOAD.promise;
         data = PAYLOAD.data;
-        isRegularPromise = !isPromiEvent(promiEventOrPromise) && isPromise(promiEventOrPromise);
 
       } else {
         return next(action);
@@ -95,6 +92,8 @@ export default function web3Middleware(config = {}) {
       };
 
       dispatch(createAction(data, 'pending'));
+      
+      const isRegularPromise = isPromise(promiEventOrPromise) && !isPromiEvent(promiEventOrPromise)
 
       return isRegularPromise
         ? promiEventOrPromise.then(onFulfilled).catch(onRejected)
